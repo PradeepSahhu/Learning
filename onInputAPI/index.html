@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // debouncing and
+      let timer;
+      function debounceChangeDiv() {
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+          changeDiv();
+        }, 1000);
+      }
+
+      function changeDiv() {
+        const a = parseInt(document.getElementsByName("a").value);
+        const b = parseInt(document.getElementsByName("b").value);
+
+        const d = document.getElementById("root");
+
+        fetch("https://fakestoreapi.com/products")
+          .then((data) => {
+            return data.json();
+          })
+          .then((data) => {
+            data.forEach((element) => {
+              d.innerHTML += element.title + "<br/>";
+            });
+          });
+      }
+    </script>
+
+    <input oninput="debounceChangeDiv()" name="a" />
+    <input oninput="debounceChangeDiv()" name="b" />
+
+    <div id="root"></div>
+  </body>
+</html>
