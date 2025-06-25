@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="parentComponent"></div>
+
+    <script>
+      const state = {
+        counter: 0,
+      };
+
+      function inCrementFunction() {
+        state.counter++;
+        reRenderComponent();
+      }
+
+      function reRenderComponent() {
+        const parent = document.getElementById("parentComponent");
+        parent.innerHTML = ``;
+        const button = buttonComponent(state.counter);
+        parent.appendChild(button);
+        return;
+      }
+
+      function buttonComponent(value) {
+        const btn = document.createElement("button");
+        btn.innerHTML = `Counter ${value}`;
+        btn.setAttribute("onclick", "inCrementFunction()");
+        return btn;
+      }
+
+      reRenderComponent();
+    </script>
+  </body>
+</html>
