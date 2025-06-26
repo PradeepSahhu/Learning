@@ -9,13 +9,14 @@ export function Todo() {
 
   const dispatch = useDispatch();
   return (
-    <div className="mt-6 space-y-4">
+    <div className="mt-6 space-y-4 flex-col justify-center">
       {todos.map((todo) => (
         <div
           key={todo.id}
-          className="flex items-center justify-between bg-gray-800 text-white px-4 py-2 rounded shadow"
+          className="flex w-1/2 items-center justify-between bg-gray-800 text-white px-4 py-2 rounded shadow"
         >
           <li className="list-none text-lg">{todo.id}</li>
+          <li className="list-none text-lg text-white">{todo.text}</li>
 
           <button
             onClick={() => dispatch(removeTodo(todo.id))}
