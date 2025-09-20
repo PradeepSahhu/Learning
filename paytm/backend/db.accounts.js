@@ -1,16 +1,18 @@
 const mongoose = require("mongoose");
 
 const AccountSchema = new mongoose.Schema({
-  id: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
   balance: {
-    type: number,
+    type: Number,
     required: true,
     default: 0,
   },
 });
 
-export const Account = mongoose.model("Account", AccountSchema);
+const Account = mongoose.model("Account", AccountSchema);
+
+module.exports = { Account };

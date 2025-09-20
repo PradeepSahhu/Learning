@@ -5,20 +5,21 @@ const { User } = require("../db.users");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = require("../config");
 const authMiddleWare = require("../middlewares/authMiddleware");
-const Account = require("../db.accounts");
+const { Account } = require("../db.accounts");
 
-const user = zod.object({
-  userName: zod.string(),
+const userStructure = zod.object({
+  userName: zod.string().email(),
   firstName: zod.string(),
   lastName: zod.string(),
   password: zod.string(),
 });
 
 router.post("/signup", async (req, res) => {
-  const result = user.safeParse(req.body);
+  const result = userStructure.safeParse(req.body);
 
   if (!result.success) {
-    return res.json({ message: "Invalid input" });
+    console.log(result.error);
+    return res.status(400).json({ message: "Invalid input" });
   }
   const { userName, firstName, lastName, password } = req.body;
 

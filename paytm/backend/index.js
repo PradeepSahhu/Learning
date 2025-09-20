@@ -12,7 +12,9 @@ app.use(express.json());
 
 const connectToDatabase = async () => {
   mongoose
-    .connect("mongodb://localhost:27017/paytm")
+    .connect(
+      "mongodb://localhost:27017/paytm?replicaSet=rs0&retryWrites=true&w=majority"
+    )
     .then(() => {
       console.log("connected to the database");
     })

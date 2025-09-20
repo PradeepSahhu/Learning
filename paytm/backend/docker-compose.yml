@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand({ping:1})"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mongo-init:
+    image: mongo:6.0
+    container_name: mongo-init
+    depends_on:
+      mongo:
+        condition: service_healthy
+    entrypoint: ["sh", "-c"]
+    # waits for mongo to be ready then runs rs.initiate() if not already
+    command:
+      - >
+        mongosh --host mongo --eval '
+        try {
+          const status = rs.status();
+          printjson(status);
+          print("Replica set already initiated");
+        } catch(e) {
+          print("Initiating replica set...");
+          rs.initiate({_id: "rs0", members: [{ _id: 0, host: "localhost:27017" }]});
+          // wait until PRIMARY
+          let i = 0;
+          while (i < 30) {
+            const s = rs.status();
+            if (s.ok && s.myState === 1) { print("PRIMARY ready"); break; }
+            i++;
+            sleep(1000);
+          }
+        }
+        exit;
+        '
+    restart: "no"
